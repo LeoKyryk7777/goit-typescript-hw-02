@@ -1,15 +1,20 @@
 import { FaSearch } from "react-icons/fa";
 import css from "./SearchBar.module.css";
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import toast from "react-hot-toast";
+import { string } from "yup";
 
-export default function SearchBar({ onSubmit }) {
-  const [query, setQuery] = useState("");
-  const handleChange = (e) => {
+interface SearchBarProps {
+  onSubmit: (query: string) => void;
+}
+
+export default function SearchBar({ onSubmit }: SearchBarProps) {
+  const [query, setQuery] = useState<string>("");
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (query.trim() === "") {
@@ -25,8 +30,8 @@ export default function SearchBar({ onSubmit }) {
         <input
           className={css.searchInput}
           type="text"
-          autocomplete="off"
-          autofocus
+          autoComplete="off"
+          autoFocus
           placeholder="Search images and photos"
           onChange={handleChange}
           value={query}

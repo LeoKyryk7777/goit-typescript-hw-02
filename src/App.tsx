@@ -8,17 +8,18 @@ import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import css from "./index.module.css";
 import { searchPhotos } from "./services/api";
 import Modal from "react-modal";
+import { Image } from "./types";
 Modal.setAppElement("#root");
 
 export default function App() {
-  const [photos, setPhotos] = useState([]);
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalPage, setTotalPages] = useState(0);
-  const [isError, setIsError] = useState(false);
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [modalImage, setModalImage] = useState(null);
+  const [photos, setPhotos] = useState<Image[]>([]);
+  const [query, setQuery] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [totalPage, setTotalPages] = useState<number>(0);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [modalImage, setModalImage] = useState<Image | null>(null);
 
   useEffect(() => {
     if (!query.trim()) return;
@@ -27,7 +28,7 @@ export default function App() {
         setIsLoading(true);
         const data = await searchPhotos(query, page);
         setPhotos((prev) => [...prev, ...data.results]);
-        setTotalPages(data.totalPages);
+        setTotalPages(data.total_pages);
       } catch (error) {
         console.log(error);
         setIsError(true);
@@ -38,16 +39,18 @@ export default function App() {
     getPhoto();
   }, [query, page]);
 
-  const handleSearch = (newQuery) => {
+  const handleSearch = (newQuery: string) => {
     if (!newQuery.trim()) return;
     setQuery(newQuery);
     setPage(1);
     setPhotos([]);
   };
+
   const loadMore = () => {
     setPage(page + 1);
   };
-  const openModal = (image) => {
+
+  const openModal = (image: Image) => {
     setModalImage(image);
     setIsOpen(true);
   };
